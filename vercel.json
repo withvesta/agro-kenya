@@ -1,0 +1,9 @@
+{
+  "name": "agro-kenya",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

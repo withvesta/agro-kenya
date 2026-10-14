@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #087A4B;
+  --secondary: #0B9A5B;
+  --dark: #064E3B;
+  --light: #E8F6EE;
+  --cream: #F8FAF4;
+}
+
+body {
+  background-color: var(--cream);
+  color: #1e293b;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #E8F6EE;
+}
+::-webkit-scrollbar-thumb {
+  background: #0B9A5B;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #087A4B;
+}
+
+/* Glassmorphism utility classes */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(8, 122, 75, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(8, 122, 75, 0.06);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px 0 rgba(8, 122, 75, 0.14);
+  border-color: rgba(8, 122, 75, 0.25);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(8, 122, 75, 0.15);
+}
+
+.glass-dark {
+  background: rgba(6, 78, 59, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-input {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(8, 122, 75, 0.2);
+}
+.glass-input:focus {
+  border-color: #0B9A5B;
+  box-shadow: 0 0 0 3px rgba(11, 154, 91, 0.2);
+  outline: none;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+/* Hero Background styling overlay */
+.hero-gradient-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 78, 59, 0.65) 0%,
+    rgba(6, 78, 59, 0.45) 50%,
+    rgba(6, 78, 59, 0.85) 100%
+  );
+}
+
+/* Leaf Pattern CSS Background */
+.leaf-pattern {
+  background-color: #F8FAF4;
+  background-image: radial-gradient(#0B9A5B 0.75px, transparent 0.75px), radial-gradient(#0B9A5B 0.75px, #F8FAF4 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.95;
+}

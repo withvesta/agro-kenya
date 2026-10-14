@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agro Kenya — Together for a Thriving Agriculture</title>
+    <meta name="description" content="Agro Kenya connects farmers, buyers, sellers, land owners, machinery providers and agricultural service providers across Kenya." />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN Fallback for instant high-fidelity styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              agro: {
+                50: '#E8F6EE',
+                100: '#D1EDDC',
+                200: '#A3DCB9',
+                300: '#75CB96',
+                400: '#47BA73',
+                500: '#0B9A5B',
+                600: '#087A4B',
+                700: '#06623C',
+                800: '#064E3B',
+                900: '#033527',
+                dark: '#064E3B',
+                primary: '#087A4B',
+                secondary: '#0B9A5B',
+                light: '#E8F6EE',
+                cream: '#F8FAF4'
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'Poppins', 'sans-serif'],
+            },
+            boxShadow: {
+              'glass': '0 8px 32px 0 rgba(8, 122, 75, 0.08)',
+              'glass-hover': '0 14px 40px 0 rgba(8, 122, 75, 0.16)',
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body class="bg-[#F8FAF4] text-slate-800 font-sans antialiased selection:bg-[#0B9A5B] selection:text-white min-h-screen flex flex-col">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
