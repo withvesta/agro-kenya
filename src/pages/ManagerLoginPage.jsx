@@ -7,8 +7,8 @@ export default function ManagerLoginPage({ setActivePage }) {
   const { login, updateProfile } = useAuth();
   const { addToast } = useToast();
 
-  const [email, setEmail] = useState('onlyvee222@gmail.com');
-  const [password, setPassword] = useState('AgroKenya360');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -127,7 +127,7 @@ export default function ManagerLoginPage({ setActivePage }) {
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-4" autoComplete="off">
               <div>
                 <label className="text-xs font-bold text-slate-700 block mb-1">Manager Email Address</label>
                 <div className="relative">
@@ -135,9 +135,10 @@ export default function ManagerLoginPage({ setActivePage }) {
                   <input
                     type="email"
                     required
+                    autoComplete="off"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="manager@agrokenya.co.ke"
+                    placeholder="Enter manager email"
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#087A4B] focus:ring-2 focus:ring-[#087A4B]/20"
                   />
                 </div>
@@ -159,6 +160,7 @@ export default function ManagerLoginPage({ setActivePage }) {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
+                    autoComplete="new-password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter manager password"
@@ -172,12 +174,6 @@ export default function ManagerLoginPage({ setActivePage }) {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-              </div>
-
-              <div className="p-3 bg-[#F8FAF4] rounded-xl border border-slate-200 text-[11px] text-slate-600 space-y-1">
-                <span className="font-bold text-[#087A4B] block">Initial Bootstrap Manager Account:</span>
-                <span>Email: <code className="bg-slate-200 px-1 rounded font-bold">manager@agrokenya.co.ke</code></span>
-                <span className="block">Temporary Password: <code className="bg-slate-200 px-1 rounded font-bold">Agro360</code></span>
               </div>
 
               <button

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, Mail, MapPin, Send, CheckCircle2, MessageSquare } from 'lucide-react';
+import { Mail, Send, CheckCircle2, MessageSquare } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
 
 export default function ContactPage() {
@@ -40,36 +40,16 @@ export default function ContactPage() {
           </div>
 
           <div className="space-y-4 text-xs">
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#F8FAF4] border border-[#087A4B]/20">
-              <Phone className="w-5 h-5 text-[#087A4B] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-4 p-6 rounded-2xl bg-[#F8FAF4] border border-[#087A4B]/20">
+              <Mail className="w-6 h-6 text-[#087A4B] flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Phone Hotline</h4>
-                <p className="text-slate-600 font-mono mt-0.5">+254 700 123 456 / +254 712 345 678</p>
+                <h4 className="font-bold text-slate-900 text-sm">Official Email Support</h4>
+                <p className="text-slate-600 font-medium mt-1 text-xs">info@agrokenya.co.ke</p>
+                <p className="text-slate-600 font-medium text-xs">support@agrokenya.co.ke</p>
+                <p className="text-slate-400 text-[11px] mt-2">
+                  All platform inquiries, seller verifications, and disputes are securely handled via official email.
+                </p>
               </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#F8FAF4] border border-[#087A4B]/20">
-              <Mail className="w-5 h-5 text-[#087A4B] flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-slate-900 text-sm">Email Address</h4>
-                <p className="text-slate-600 font-medium mt-0.5">info@agrokenya.co.ke / support@agrokenya.co.ke</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-[#F8FAF4] border border-[#087A4B]/20">
-              <MapPin className="w-5 h-5 text-[#087A4B] flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-bold text-slate-900 text-sm">Headquarters</h4>
-                <p className="text-slate-600 mt-0.5">Agri-Innovation Hub, 4th Floor, Westlands, Nairobi, Kenya</p>
-              </div>
-            </div>
-          </div>
-
-          {/* MAP PLACEHOLDER */}
-          <div className="rounded-2xl overflow-hidden border border-slate-200 aspect-[16/9] bg-slate-100 relative flex items-center justify-center text-slate-400 text-xs font-bold">
-            <div className="text-center p-4">
-              <MapPin className="w-8 h-8 text-[#087A4B] mx-auto mb-1 animate-bounce" />
-              <span>Interactive Kenya Map (Nairobi • Nakuru • Eldoret Hubs)</span>
             </div>
           </div>
         </div>

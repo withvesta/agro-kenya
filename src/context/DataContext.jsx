@@ -12,12 +12,16 @@ export const DataProvider = ({ children }) => {
 
   // Listings state
   const [listings, setListings] = useState(() => {
-    if (isSupabaseConfigured) {
-      localStorage.removeItem('agro_kenya_listings');
-      return [];
-    }
     const saved = localStorage.getItem('agro_kenya_listings');
-    return saved ? JSON.parse(saved) : INITIAL_LISTINGS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {
+        // Fallback to initial listings
+      }
+    }
+    return INITIAL_LISTINGS;
   });
 
   // Fetch live Supabase database listings on mount
@@ -25,7 +29,7 @@ export const DataProvider = ({ children }) => {
     async function loadLiveListings() {
       if (!isSupabaseConfigured) return;
       const data = await dbGetListings();
-      if (data) {
+      if (data && ((data.products && data.products.length > 0) || (data.services && data.services.length > 0))) {
         const liveProducts = (data.products || []).map(p => ({
           id: p.id,
           userId: p.seller_id,
@@ -40,9 +44,9 @@ export const DataProvider = ({ children }) => {
           price: Number(p.price) || 0,
           priceUnit: p.unit || 'kg',
           quantity: p.quantity_available || 'Available',
-          location: p.location || `${p.county || 'Nairobi'}, Kenya`,
-          county: p.county || 'Nairobi',
-          town: p.town || 'CBD',
+          location: p.location || `${p.county || 'Nakuru'}, Kenya`,
+          county: p.county || 'Nakuru',
+          town: p.town || 'Naivasha',
           images: (p.images && p.images.length > 0) ? p.images : (p.image_url ? [p.image_url] : ['https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800']),
           status: p.status || 'Active',
           featured: p.featured || false,
@@ -65,9 +69,9 @@ export const DataProvider = ({ children }) => {
           price: Number(s.price) || 0,
           priceUnit: s.pricing_unit || 'per acre',
           quantity: s.availability_status || 'Available',
-          location: s.location || `${s.county || 'Nairobi'}, Kenya`,
-          county: s.county || 'Nairobi',
-          town: s.town || 'CBD',
+          location: s.location || `${s.county || 'Kiambu'}, Kenya`,
+          county: s.county || 'Kiambu',
+          town: s.town || 'Thika',
           images: (s.images && s.images.length > 0) ? s.images : (s.image_url ? [s.image_url] : ['https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=800']),
           status: s.status || 'Active',
           featured: s.featured || false,

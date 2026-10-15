@@ -5,7 +5,7 @@ import { useData } from '../../context/DataContext';
 import { useCart } from '../../context/CartContext';
 
 export default function Navbar({ activePage, setActivePage }) {
-  const { currentUser, logout, switchDemoUser, isAdmin } = useAuth();
+  const { currentUser, logout, isAdmin } = useAuth();
   const { favorites, setIsAddListingOpen } = useData();
   const { cartItemCount, setIsCartOpen } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -28,7 +28,7 @@ export default function Navbar({ activePage, setActivePage }) {
 
   return (
     <header className="sticky top-0 z-40 glass-nav transition-all">
-      {/* Top micro bar for convenience */}
+      {/* Top micro bar */}
       <div className="bg-[#064E3B] text-white text-xs py-1 px-4 flex justify-between items-center">
         <div className="flex items-center gap-2 max-w-7xl mx-auto w-full justify-between">
           <span className="flex items-center gap-1.5 opacity-90">
@@ -36,19 +36,7 @@ export default function Navbar({ activePage, setActivePage }) {
             Agro Kenya Digital Marketplace — Kenya's Trusted Agri-Hub
           </span>
           <div className="flex items-center gap-3 text-[11px]">
-            <span className="hidden md:inline text-emerald-200">Switch Role:</span>
-            <button
-              onClick={() => switchDemoUser("user-1")}
-              className={`px-2 py-0.5 rounded transition ${currentUser?.id === 'user-1' ? 'bg-[#0B9A5B] font-bold' : 'hover:bg-white/10'}`}
-            >
-              👨‍🌾 Farmer
-            </button>
-            <button
-              onClick={() => switchDemoUser("user-3")}
-              className={`px-2 py-0.5 rounded transition ${currentUser?.id === 'user-3' ? 'bg-[#0B9A5B] font-bold' : 'hover:bg-white/10'}`}
-            >
-              🛒 Buyer
-            </button>
+            <span className="text-emerald-200 flex items-center gap-1">🔒 SSL Encrypted • Verified Platform</span>
           </div>
         </div>
       </div>
@@ -158,6 +146,16 @@ export default function Navbar({ activePage, setActivePage }) {
                       <User className="w-4 h-4" />
                       <span>My Dashboard</span>
                     </button>
+
+                    {currentUser?.accountType === 'Manager' && (
+                      <button
+                        onClick={() => { handleNavClick('manager-dashboard'); setIsProfileMenuOpen(false); }}
+                        className="w-full text-left px-4 py-2 text-sm text-[#087A4B] font-bold hover:bg-[#E8F6EE] flex items-center gap-2"
+                      >
+                        <Shield className="w-4 h-4" />
+                        <span>Manager Console</span>
+                      </button>
+                    )}
 
                     <button
                       onClick={() => { handleNavClick('favorites'); setIsProfileMenuOpen(false); }}

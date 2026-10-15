@@ -1,5 +1,5 @@
 import React from 'react';
-import { Leaf, Phone, Mail, MapPin, ShieldCheck, Heart } from 'lucide-react';
+import { Leaf, Mail, ShieldCheck, Heart } from 'lucide-react';
 
 export default function Footer({ setActivePage }) {
   return (
@@ -20,16 +20,8 @@ export default function Footer({ setActivePage }) {
             </p>
             <div className="flex flex-col gap-2.5 text-xs text-emerald-200">
               <div className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#0B9A5B]" />
-                <span>+254 700 123 456 / +254 712 345 678</span>
-              </div>
-              <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#0B9A5B]" />
                 <span>info@agrokenya.co.ke</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#0B9A5B]" />
-                <span>Agri-Innovation Hub, Westlands, Nairobi, Kenya</span>
               </div>
             </div>
           </div>
@@ -67,7 +59,6 @@ export default function Footer({ setActivePage }) {
               <li><button onClick={() => { setActivePage('safety'); window.scrollTo(0,0); }} className="hover:text-emerald-300 transition">Marketplace Safety Tips</button></li>
               <li><button onClick={() => { setActivePage('contact'); window.scrollTo(0,0); }} className="hover:text-emerald-300 transition">Report a Problem</button></li>
               <li><button onClick={() => { setActivePage('contact'); window.scrollTo(0,0); }} className="hover:text-emerald-300 transition">Help Center</button></li>
-              <li><button onClick={() => { setActivePage('manager-login'); window.scrollTo(0,0); }} className="hover:text-emerald-300 transition font-medium text-emerald-300/80 hover:text-emerald-200">🔒 Staff / Manager Portal</button></li>
             </ul>
           </div>
 

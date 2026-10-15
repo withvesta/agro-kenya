@@ -26,6 +26,31 @@ export default function AdminDashboardPage({ onExitAdmin }) {
   const { addToast } = useToast();
 
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard'|'members'|'products'|'services'|'orders'|'messages'|'reports'|'settings'
+
+  // Access guard: strictly allow only authenticated managers
+  if (!currentUser || currentUser.accountType !== 'Manager') {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+        <div className="bg-white rounded-3xl p-8 max-w-md w-full text-center space-y-4 shadow-2xl">
+          <div className="w-16 h-16 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center mx-auto">
+            <ShieldCheck className="w-8 h-8" />
+          </div>
+          <h2 className="text-xl font-black text-slate-900">Restricted Manager Area</h2>
+          <p className="text-xs text-slate-600">
+            Access denied. You must be authenticated with an authorized Manager account to view or operate this administrative console.
+          </p>
+          <div className="pt-2 flex flex-col gap-2">
+            <button
+              onClick={onExitAdmin}
+              className="w-full bg-[#087A4B] text-white font-bold py-3 rounded-xl text-xs hover:bg-[#064E3B] transition"
+            >
+              Return to Public Marketplace
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   // Search & Filters
   const [memberSearch, setMemberSearch] = useState('');

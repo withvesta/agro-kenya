@@ -23,11 +23,19 @@ export default function UserDashboardPage({ setActivePage }) {
 
   if (!currentUser) {
     return (
-      <div className="max-w-md mx-auto my-16 text-center bg-white p-8 rounded-3xl shadow-xl">
-        <p className="text-slate-700 text-sm mb-4 font-bold">Please login to access your user dashboard.</p>
-        <button onClick={() => setActivePage('login')} className="bg-[#087A4B] text-white font-bold px-6 py-2.5 rounded-full text-xs shadow">
-          Go to Login
-        </button>
+      <div className="max-w-md mx-auto my-16 text-center bg-white p-8 rounded-3xl shadow-xl space-y-4 border border-slate-100">
+        <div className="w-14 h-14 bg-emerald-50 text-[#087A4B] rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+          <ShieldCheck className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-slate-800">Customer Account Protected</h2>
+        <p className="text-slate-600 text-xs leading-relaxed">
+          Please log in to your registered account to manage your listings, view your orders, and access private seller messages.
+        </p>
+        <div className="pt-2">
+          <button onClick={() => setActivePage('login')} className="w-full bg-[#087A4B] text-white font-bold py-3 rounded-xl text-xs shadow hover:bg-[#064E3B] transition">
+            Log In to Customer Account
+          </button>
+        </div>
       </div>
     );
   }

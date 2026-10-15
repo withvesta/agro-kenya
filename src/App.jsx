@@ -62,10 +62,20 @@ export default function App() {
     setActiveChatListing
   } = useData();
 
-  const { isAdmin } = useAuth();
+  const { currentUser, isAdmin } = useAuth();
 
   // Separate Manager / Admin Application Area
   if (activePage === 'manager-login') {
+    if (currentUser?.accountType === 'Manager') {
+      return (
+        <AdminDashboardPage
+          onExitAdmin={() => {
+            window.history.pushState({}, '', '/');
+            setActivePage('home');
+          }}
+        />
+      );
+    }
     return (
       <div className="min-h-screen flex flex-col bg-[#F8FAF4] text-slate-800 font-sans antialiased">
         <main className="flex-1 pt-4">
@@ -82,6 +92,22 @@ export default function App() {
   }
 
   if (activePage === 'manager-dashboard' || activePage === 'admin') {
+    // Strictly restrict Manager Tab / Admin Dashboard to authenticated Managers
+    if (!currentUser || currentUser.accountType !== 'Manager') {
+      return (
+        <div className="min-h-screen flex flex-col bg-[#F8FAF4] text-slate-800 font-sans antialiased">
+          <main className="flex-1 pt-4">
+            <ManagerLoginPage setActivePage={(page) => {
+              if (page === 'home') {
+                window.history.pushState({}, '', '/');
+              }
+              setActivePage(page);
+            }} />
+          </main>
+          <Footer setActivePage={setActivePage} />
+        </div>
+      );
+    }
     return (
       <AdminDashboardPage
         onExitAdmin={() => {

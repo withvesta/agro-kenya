@@ -7,12 +7,16 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState(() => {
-    if (isSupabaseConfigured) {
-      localStorage.removeItem('agro_kenya_users');
-      return [];
-    }
     const saved = localStorage.getItem('agro_kenya_users');
-    return saved ? JSON.parse(saved) : INITIAL_USERS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {
+        // Fallback to initial users
+      }
+    }
+    return INITIAL_USERS;
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
@@ -21,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       return savedUser ? JSON.parse(savedUser) : null;
     }
     const savedUser = localStorage.getItem('agro_kenya_current_user');
-    return savedUser ? JSON.parse(savedUser) : INITIAL_USERS[0];
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
   const { addToast } = useToast();
@@ -38,11 +42,11 @@ export const AuthProvider = ({ children }) => {
     }
   }, [currentUser]);
 
-  // Login handler
+  // Login handler with strict authentication
   const login = (emailOrPhone, password) => {
     const term = emailOrPhone.trim().toLowerCase();
 
-    // Special check for Manager Admin credentials
+    // Check for Manager Admin credentials
     if (term === 'onlyvee222@gmail.com' || term === 'manager@agrokenya.co.ke') {
       if (password === 'AgroKenya360' || password === 'Agro360') {
         const managerUser = {
@@ -66,34 +70,34 @@ export const AuthProvider = ({ children }) => {
         setCurrentUser(managerUser);
         addToast(`Welcome back, ${managerUser.fullName}!`, 'success');
         return { success: true, user: managerUser };
+      } else {
+        addToast("Invalid manager credentials.", "error");
+        return { success: false, message: "Invalid manager credentials." };
       }
     }
 
     const found = users.find(u =>
-      (u.email.toLowerCase() === term || u.phone.includes(term)) && u.status !== 'Suspended'
+      u.email.toLowerCase() === term || u.phone.includes(term)
     );
 
     if (found) {
+      if (found.status === 'Suspended') {
+        addToast("Your account has been suspended by Agro Kenya admin. Contact support.", "error");
+        return { success: false, message: "Account suspended." };
+      }
+
+      const isPasswordValid = found.password ? found.password === password : password === 'password123';
+      if (!isPasswordValid) {
+        addToast("Incorrect password. Please try again.", "error");
+        return { success: false, message: "Incorrect password." };
+      }
+
       setCurrentUser(found);
       addToast(`Welcome back, ${found.fullName}!`, 'success');
       return { success: true, user: found };
     } else {
-      const suspended = users.find(u => (u.email.toLowerCase() === term || u.phone.includes(term)) && u.status === 'Suspended');
-      if (suspended) {
-        addToast("Your account has been suspended by Agro Kenya admin. Contact support.", "error");
-        return { success: false, message: "Account suspended." };
-      }
-      addToast("Invalid credentials. Please use onlyvee222@gmail.com", "error");
-      return { success: false, message: "Invalid credentials" };
-    }
-  };
-
-  // Switch demo persona instantly
-  const switchDemoUser = (userId) => {
-    const target = users.find(u => u.id === userId);
-    if (target) {
-      setCurrentUser(target);
-      addToast(`Switched account to ${target.fullName} (${target.accountType})`, 'info');
+      addToast("Invalid email/phone or password. Please try again.", "error");
+      return { success: false, message: "Invalid email/phone or password." };
     }
   };
 
@@ -110,9 +114,10 @@ export const AuthProvider = ({ children }) => {
       fullName: userData.fullName,
       businessName: userData.businessName || `${userData.fullName}'s Enterprise`,
       email: userData.email,
+      password: userData.password || "password123",
       phone: userData.phone || "+254 700 000 000",
       whatsapp: userData.phone ? userData.phone.replace(/[^0-9]/g, '') : "254700000000",
-      county: userData.county || "Nairobi",
+      county: userData.county || "Nakuru",
       town: userData.town || "CBD",
       accountType: userData.accountType || "Farmer",
       profileImage: userData.profileImage || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=300",
@@ -155,7 +160,6 @@ export const AuthProvider = ({ children }) => {
       login,
       register,
       logout,
-      switchDemoUser,
       updateProfile,
       isAdmin
     }}>

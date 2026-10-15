@@ -3,9 +3,9 @@ import { Leaf, Phone, Lock, ArrowRight, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage({ setActivePage }) {
-  const { login, switchDemoUser } = useAuth();
-  const [emailOrPhone, setEmailOrPhone] = useState('johnmwangi@gmail.com');
-  const [password, setPassword] = useState('password123');
+  const { login } = useAuth();
+  const [emailOrPhone, setEmailOrPhone] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,7 +41,7 @@ export default function LoginPage({ setActivePage }) {
             Login to your Agro Kenya account to manage listings or contact sellers.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">Phone Number or Email</label>
               <div className="relative">
@@ -49,6 +49,7 @@ export default function LoginPage({ setActivePage }) {
                 <input
                   type="text"
                   required
+                  autoComplete="off"
                   value={emailOrPhone}
                   onChange={(e) => setEmailOrPhone(e.target.value)}
                   placeholder="Enter your phone number or email"
@@ -62,7 +63,7 @@ export default function LoginPage({ setActivePage }) {
                 <label className="text-xs font-bold text-slate-700">Password</label>
                 <button
                   type="button"
-                  onClick={() => alert("Password reset link sent to your registered email/phone!")}
+                  onClick={() => alert("Password reset instructions will be sent to your registered email.")}
                   className="text-[11px] text-[#087A4B] font-bold hover:underline"
                 >
                   Forgot Password?
@@ -73,6 +74,7 @@ export default function LoginPage({ setActivePage }) {
                 <input
                   type="password"
                   required
+                  autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter your password"
@@ -89,22 +91,6 @@ export default function LoginPage({ setActivePage }) {
             </button>
           </form>
 
-          <div className="my-6 flex items-center gap-3">
-            <span className="h-px bg-slate-200 flex-1" />
-            <span className="text-[10px] uppercase font-bold text-slate-400">OR</span>
-            <span className="h-px bg-slate-200 flex-1" />
-          </div>
-
-          <button
-            onClick={() => {
-              login("johnmwangi@gmail.com", "password123");
-              setActivePage('dashboard');
-            }}
-            className="w-full border border-slate-200 hover:border-slate-300 text-slate-700 font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 transition"
-          >
-            <span className="text-lg">🌐</span>
-            <span>Continue with Google</span>
-          </button>
         </div>
 
         <div className="mt-8 pt-4 border-t border-slate-100 flex flex-col gap-2 text-center text-xs text-slate-500">
@@ -115,14 +101,6 @@ export default function LoginPage({ setActivePage }) {
               className="text-[#087A4B] font-bold hover:underline"
             >
               Create Account
-            </button>
-          </div>
-          <div className="pt-2">
-            <button
-              onClick={() => setActivePage('manager-login')}
-              className="text-slate-400 hover:text-[#087A4B] transition flex items-center justify-center gap-1 mx-auto text-[11px]"
-            >
-              🔒 Administrative / Staff Portal
             </button>
           </div>
         </div>
