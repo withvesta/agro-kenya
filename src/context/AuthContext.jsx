@@ -1,34 +1,77 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_USERS } from '../data/seedData';
 import { useToast } from './ToastContext';
-import { isSupabaseConfigured } from '../lib/supabase';
+import { isSupabaseConfigured, dbGetProfiles, dbInsertProfile } from '../lib/supabase';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('agro_kenya_users');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch (e) {
-        // Fallback to initial users
-      }
+    // Purge cached legacy mock users
+    const cachedUsers = localStorage.getItem('agro_kenya_users');
+    if (cachedUsers && (
+      cachedUsers.includes('johnmwangi') ||
+      cachedUsers.includes('Wanjiku') ||
+      cachedUsers.includes('AgroTech') ||
+      cachedUsers.includes('Grace Njeri') ||
+      cachedUsers.includes('user-1')
+    )) {
+      localStorage.removeItem('agro_kenya_users');
+      return [];
     }
-    return INITIAL_USERS;
+    const saved = localStorage.getItem('agro_kenya_users');
+    return saved ? JSON.parse(saved) : [];
   });
 
   const [currentUser, setCurrentUser] = useState(() => {
-    if (isSupabaseConfigured) {
-      const savedUser = localStorage.getItem('agro_kenya_current_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+    const cachedCurr = localStorage.getItem('agro_kenya_current_user');
+    if (cachedCurr && (
+      cachedCurr.includes('johnmwangi') ||
+      cachedCurr.includes('user-1') ||
+      cachedCurr.includes('John Mwangi')
+    )) {
+      localStorage.removeItem('agro_kenya_current_user');
+      return null;
     }
     const savedUser = localStorage.getItem('agro_kenya_current_user');
     return savedUser ? JSON.parse(savedUser) : null;
   });
 
   const { addToast } = useToast();
+
+  // Load live registered profiles from Supabase on mount
+  useEffect(() => {
+    async function loadLiveProfiles() {
+      if (!isSupabaseConfigured) return;
+      const data = await dbGetProfiles();
+      if (data && Array.isArray(data)) {
+        if (data.length > 0) {
+          const liveUsers = data.map(p => ({
+            id: p.id,
+            fullName: p.full_name,
+            businessName: p.business_name || `${p.full_name}'s Enterprise`,
+            email: p.email,
+            phone: p.phone || '',
+            whatsapp: p.whatsapp || '',
+            county: p.county || 'Nairobi',
+            town: p.town || 'CBD',
+            accountType: p.account_type || 'Farmer',
+            profileImage: p.avatar_url || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=300',
+            verified: p.verified || false,
+            status: p.account_status || 'Active',
+            rating: 5.0,
+            reviewCount: 0,
+            about: p.bio || `Registered ${p.account_type || 'member'} on Agro Kenya.`,
+            joinedDate: p.created_at ? p.created_at.split('T')[0] : new Date().toISOString().split('T')[0]
+          }));
+          setUsers(liveUsers);
+        } else {
+          setUsers(prev => prev.filter(u => !u.email?.includes('mwangi') && !u.id?.startsWith('user-1') && !u.fullName?.includes('Wanjiku')));
+        }
+      }
+    }
+    loadLiveProfiles();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('agro_kenya_users', JSON.stringify(users));
@@ -131,6 +174,23 @@ export const AuthProvider = ({ children }) => {
 
     setUsers(prev => [newUser, ...prev]);
     setCurrentUser(newUser);
+
+    // Capture forthcoming client in Supabase
+    if (isSupabaseConfigured) {
+      dbInsertProfile({
+        full_name: newUser.fullName,
+        business_name: newUser.businessName,
+        email: newUser.email,
+        phone: newUser.phone,
+        whatsapp: newUser.whatsapp,
+        county: newUser.county,
+        town: newUser.town,
+        account_type: newUser.accountType,
+        avatar_url: newUser.profileImage,
+        bio: newUser.about
+      });
+    }
+
     addToast("Account created successfully! Welcome to Agro Kenya.", "success");
     return { success: true, user: newUser };
   };

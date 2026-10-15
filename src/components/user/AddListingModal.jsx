@@ -20,9 +20,7 @@ export default function AddListingModal({ isOpen, onClose }) {
     county: currentUser?.county || 'Nakuru',
     town: currentUser?.town || 'Naivasha',
     description: '',
-    images: [
-      "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&q=80&w=800"
-    ]
+    images: []
   });
 
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -104,7 +102,7 @@ export default function AddListingModal({ isOpen, onClose }) {
             <input
               type="text"
               required
-              placeholder="e.g. Fresh Red Tomatoes (Anna F1), John Deere Tractor, 5 Acres Land"
+              placeholder="e.g. Fresh Red Tomatoes, Farm Tractor, 5 Acres Arable Land"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               className="w-full p-3 rounded-xl border border-slate-200 text-sm focus:border-[#087A4B] focus:ring-2 focus:ring-[#087A4B]/20 outline-none"
@@ -223,7 +221,7 @@ export default function AddListingModal({ isOpen, onClose }) {
             <div className="flex gap-2 mb-3">
               <input
                 type="url"
-                placeholder="Paste Image URL (or use default mock images)"
+                placeholder="Paste Image URL"
                 value={imageUrlInput}
                 onChange={(e) => setImageUrlInput(e.target.value)}
                 className="flex-1 p-2.5 rounded-xl border border-slate-200 text-xs outline-none"

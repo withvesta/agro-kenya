@@ -1,8 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { INITIAL_LISTINGS, INITIAL_MESSAGES, INITIAL_REPORTS, INITIAL_REVIEWS, INITIAL_ADMIN_LOGS } from '../data/seedData';
 import { useAuth } from './AuthContext';
 import { useToast } from './ToastContext';
-import { dbGetListings, isSupabaseConfigured } from '../lib/supabase';
+import { 
+  dbGetListings, 
+  dbInsertProduct, 
+  dbInsertService, 
+  dbInsertMessage, 
+  isSupabaseConfigured 
+} from '../lib/supabase';
 
 const DataContext = createContext();
 
@@ -10,18 +15,22 @@ export const DataProvider = ({ children }) => {
   const { currentUser, setUsers } = useAuth();
   const { addToast } = useToast();
 
-  // Listings state
+  // Listings state - Live client listings only (mock data purged)
   const [listings, setListings] = useState(() => {
     const saved = localStorage.getItem('agro_kenya_listings');
     if (saved) {
+      if (saved.includes('Anna F1') || saved.includes('list-1')) {
+        localStorage.removeItem('agro_kenya_listings');
+        return [];
+      }
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       } catch (e) {
-        // Fallback to initial listings
+        return [];
       }
     }
-    return INITIAL_LISTINGS;
+    return [];
   });
 
   // Fetch live Supabase database listings on mount
@@ -29,7 +38,7 @@ export const DataProvider = ({ children }) => {
     async function loadLiveListings() {
       if (!isSupabaseConfigured) return;
       const data = await dbGetListings();
-      if (data && ((data.products && data.products.length > 0) || (data.services && data.services.length > 0))) {
+      if (data) {
         const liveProducts = (data.products || []).map(p => ({
           id: p.id,
           userId: p.seller_id,
@@ -88,36 +97,36 @@ export const DataProvider = ({ children }) => {
 
   // Favorites state (array of listing IDs)
   const [favorites, setFavorites] = useState(() => {
-    if (isSupabaseConfigured) {
-      localStorage.removeItem('agro_kenya_favorites');
-      return [];
-    }
     const saved = localStorage.getItem('agro_kenya_favorites');
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Messages state
+  // Messages state - Live messages only
   const [messages, setMessages] = useState(() => {
     const saved = localStorage.getItem('agro_kenya_messages');
-    return saved ? JSON.parse(saved) : INITIAL_MESSAGES;
+    if (saved && saved.includes('Habari John!')) {
+      localStorage.removeItem('agro_kenya_messages');
+      return [];
+    }
+    return saved ? JSON.parse(saved) : [];
   });
 
-  // Reports state
+  // Reports state - Live reports only
   const [reports, setReports] = useState(() => {
     const saved = localStorage.getItem('agro_kenya_reports');
-    return saved ? JSON.parse(saved) : INITIAL_REPORTS;
+    return saved ? JSON.parse(saved) : [];
   });
 
-  // Reviews state
+  // Reviews state - Live reviews only
   const [reviews, setReviews] = useState(() => {
     const saved = localStorage.getItem('agro_kenya_reviews');
-    return saved ? JSON.parse(saved) : INITIAL_REVIEWS;
+    return saved ? JSON.parse(saved) : [];
   });
 
-  // Admin Logs state
+  // Admin Logs state - Live logs only
   const [adminLogs, setAdminLogs] = useState(() => {
     const saved = localStorage.getItem('agro_kenya_admin_logs');
-    return saved ? JSON.parse(saved) : INITIAL_ADMIN_LOGS;
+    return saved ? JSON.parse(saved) : [];
   });
 
   // Search & Filter state
@@ -189,7 +198,7 @@ export const DataProvider = ({ children }) => {
       location: `${newListingData.county || 'Nairobi'}, Kenya`,
       county: newListingData.county || "Nairobi",
       town: newListingData.town || "CBD",
-      images: newListingData.images.length > 0 ? newListingData.images : [
+      images: newListingData.images && newListingData.images.length > 0 ? newListingData.images : [
         "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800"
       ],
       status: "Active",
@@ -200,6 +209,52 @@ export const DataProvider = ({ children }) => {
     };
 
     setListings(prev => [listing, ...prev]);
+
+    // Capture in Supabase for live storage
+    if (isSupabaseConfigured) {
+      if (listing.category === 'Services & Machinery' || listing.listingType === 'Service') {
+        dbInsertService({
+          provider_name: listing.sellerName,
+          provider_image: listing.sellerImage,
+          provider_verified: listing.sellerVerified,
+          name: listing.title,
+          description: listing.description,
+          category: listing.subcategory || 'Machinery',
+          subcategory: listing.subcategory,
+          price: listing.price,
+          pricing_unit: listing.priceUnit,
+          location: listing.location,
+          county: listing.county,
+          town: listing.town,
+          image_url: listing.images[0],
+          images: listing.images,
+          availability_status: 'Available',
+          status: 'Active',
+          featured: false
+        });
+      } else {
+        dbInsertProduct({
+          seller_name: listing.sellerName,
+          seller_image: listing.sellerImage,
+          seller_verified: listing.sellerVerified,
+          name: listing.title,
+          description: listing.description,
+          category: listing.category,
+          subcategory: listing.subcategory,
+          price: listing.price,
+          unit: listing.priceUnit,
+          quantity_available: listing.quantity,
+          location: listing.location,
+          county: listing.county,
+          town: listing.town,
+          image_url: listing.images[0],
+          images: listing.images,
+          status: 'Active',
+          featured: false
+        });
+      }
+    }
+
     addToast("Listing published successfully!", "success");
     logAdminAction("CREATE_LISTING", "Listing", listing.id, `Created listing "${listing.title}"`);
     return true;
@@ -236,6 +291,15 @@ export const DataProvider = ({ children }) => {
       read: false
     };
     setMessages(prev => [...prev, newMsg]);
+
+    if (isSupabaseConfigured) {
+      dbInsertMessage({
+        listing_id: listingId,
+        listing_title: listingTitle,
+        message: text
+      });
+    }
+
     addToast("Message sent to seller!", "success");
     return true;
   };

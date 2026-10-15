@@ -92,7 +92,7 @@ export default function RegisterPage({ setActivePage }) {
             <label className="font-bold text-slate-700 block mb-1">Business / Farm Name (Optional)</label>
             <input
               type="text"
-              placeholder="e.g. Mwangi Fresh Produce Ltd"
+              placeholder="e.g. Green Valley Farm Ltd"
               value={formData.businessName}
               onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
               className="w-full p-3 rounded-xl border border-slate-200 outline-none focus:border-[#087A4B]"

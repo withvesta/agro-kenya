@@ -1,12 +1,17 @@
 import React from 'react';
-import { ArrowRight, Wheat, Tractor, MapPin, Briefcase, ShieldCheck, Lock, Headphones, Users } from 'lucide-react';
+import { ArrowRight, Wheat, Tractor, MapPin, Briefcase, ShieldCheck, Lock, Headphones, Users, Sparkles, PlusCircle } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import ListingCard from '../components/marketplace/ListingCard';
 
 export default function HomePage({ setActivePage }) {
-  const { listings, setActiveListingModal, setSelectedCategory } = useData();
+  const { listings, setActiveListingModal, setSelectedCategory, setIsAddListingOpen } = useData();
 
-  const featuredListings = listings.filter(l => l.featured || l.status === 'Active').slice(0, 4);
+  const activeListings = listings.filter(l => l.status === 'Active');
+  const featuredListings = activeListings.length > 0
+    ? (activeListings.filter(l => l.featured).length > 0
+        ? activeListings.filter(l => l.featured).slice(0, 4)
+        : activeListings.slice(0, 4))
+    : [];
 
   const categoryCards = [
     {
@@ -151,15 +156,34 @@ export default function HomePage({ setActivePage }) {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredListings.map((listing) => (
-            <ListingCard
-              key={listing.id}
-              listing={listing}
-              onSelect={(item) => setActiveListingModal(item)}
-            />
-          ))}
-        </div>
+        {featuredListings.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredListings.map((listing) => (
+              <ListingCard
+                key={listing.id}
+                listing={listing}
+                onSelect={(item) => setActiveListingModal(item)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="bg-white rounded-3xl p-10 text-center border border-slate-200/80 shadow-sm max-w-xl mx-auto space-y-4">
+            <div className="w-14 h-14 bg-emerald-50 text-[#087A4B] rounded-2xl flex items-center justify-center mx-auto shadow-sm">
+              <Sparkles className="w-7 h-7" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-800">Live Marketplace Ready</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+              No listings published yet. Be the first farmer, seller, or service provider to showcase your fresh produce, farm machinery, or fertile land to buyers across Kenya!
+            </p>
+            <button
+              onClick={() => setIsAddListingOpen(true)}
+              className="inline-flex items-center gap-1.5 bg-[#087A4B] hover:bg-[#064E3B] text-white font-bold px-6 py-2.5 rounded-full text-xs shadow-md transition"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span>Post a Listing</span>
+            </button>
+          </div>
+        )}
       </section>
 
       {/* 4. TRUST & SAFETY SECTION MATCHING MOCKUP 1 */}

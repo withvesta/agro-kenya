@@ -74,8 +74,8 @@ export default function AdminDashboardPage({ onExitAdmin }) {
   const [settings, setSettings] = useState({
     marketplaceName: 'Agro Kenya Marketplace',
     supportEmail: 'support@agrokenya.co.ke',
-    supportPhone: '+254 700 123 456',
-    defaultLocation: 'Nairobi, Kenya',
+    supportEmailSecondary: 'info@agrokenya.co.ke',
+    defaultLocation: 'Kenya',
     requireListingApproval: false
   });
 
@@ -752,11 +752,11 @@ export default function AdminDashboardPage({ onExitAdmin }) {
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-slate-700 block mb-1">Support Hotline Phone</label>
+                  <label className="text-xs font-bold text-slate-700 block mb-1">Secondary Inquiries Email</label>
                   <input
-                    type="text"
-                    value={settings.supportPhone}
-                    onChange={(e) => setSettings({ ...settings, supportPhone: e.target.value })}
+                    type="email"
+                    value={settings.supportEmailSecondary}
+                    onChange={(e) => setSettings({ ...settings, supportEmailSecondary: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#087A4B]"
                   />
                 </div>

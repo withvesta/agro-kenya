@@ -85,8 +85,14 @@ export default function MembersPage({ setActivePage }) {
         {filteredMembers.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 max-w-md mx-auto">
             <Users className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-slate-800">No members match your search</h3>
-            <p className="text-xs text-slate-500 mt-1">Try clearing search filters or selecting another member role.</p>
+            <h3 className="text-lg font-bold text-slate-800">
+              {users.length === 0 ? "Live Member Directory" : "No members match your search"}
+            </h3>
+            <p className="text-xs text-slate-500 mt-1">
+              {users.length === 0 
+                ? "No registered members yet. Registered agricultural producers, buyers, and service providers will appear here in real-time."
+                : "Try clearing search filters or selecting another member role."}
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

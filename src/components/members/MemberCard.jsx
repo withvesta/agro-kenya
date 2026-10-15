@@ -37,7 +37,7 @@ export default function MemberCard({ member, onSelect }) {
             <Phone className="w-3.5 h-3.5 text-[#087A4B]" />
             <span className="font-mono">{member.phone}</span>
           </div>
-          <RatingStars rating={member.rating || 4.8} showCount={false} />
+          <RatingStars rating={member.rating || 5.0} showCount={false} />
         </div>
       </div>
 

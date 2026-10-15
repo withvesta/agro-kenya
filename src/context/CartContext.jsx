@@ -17,39 +17,14 @@ export const CartProvider = ({ children }) => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  // Orders state
+  // Orders state - Live accurate customer orders
   const [orders, setOrders] = useState(() => {
     const saved = localStorage.getItem('agro_kenya_orders');
-    return saved ? JSON.parse(saved) : [
-      {
-        id: 'ord-1001',
-        orderNumber: 'AGRO-2026-9812',
-        buyerId: 'user-3',
-        buyerName: 'Peter Kamau',
-        buyerPhone: '+254 722 111 222',
-        sellerId: 'user-1',
-        sellerName: 'John Mwangi',
-        status: 'completed',
-        subtotal: 1600,
-        deliveryFee: 350,
-        totalAmount: 1950,
-        deliveryLocation: 'CBD, Nairobi',
-        paymentStatus: 'paid',
-        paymentMode: 'M-Pesa',
-        paymentReference: 'RK89XQ21',
-        createdAt: '2026-09-15T14:30:00Z',
-        items: [
-          {
-            id: 'item-1',
-            productId: 'list-1',
-            productName: 'Fresh Farm Tomatoes (Anna F1)',
-            quantity: 20,
-            unitPrice: 80,
-            lineTotal: 1600
-          }
-        ]
-      }
-    ];
+    if (saved && (saved.includes('ord-1001') || saved.includes('Anna F1') || saved.includes('Mwangi'))) {
+      localStorage.removeItem('agro_kenya_orders');
+      return [];
+    }
+    return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {

@@ -62,7 +62,7 @@ export default function MemberProfilePage({ member, onBack }) {
               </span>
             </div>
 
-            <RatingStars rating={member.rating || 4.8} reviewCount={member.reviewCount || memberReviews.length || 12} />
+            <RatingStars rating={member.rating || 5.0} reviewCount={member.reviewCount || memberReviews.length || 0} />
           </div>
 
           {/* ACTION BUTTONS (MESSAGE & CALL) MATCHING MOCKUP 4 */}

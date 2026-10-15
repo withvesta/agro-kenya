@@ -64,7 +64,7 @@ export default function ContactPage() {
               <input
                 type="text"
                 required
-                placeholder="e.g. John Mwangi"
+                placeholder="Enter your full name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full p-3 rounded-xl border border-slate-200 text-xs outline-none focus:border-[#087A4B]"
